@@ -1,4 +1,3 @@
-
 .DS_Store
 .idea
 *.tfstate
@@ -14,3 +13,8 @@
 serving_dir
 .ipynb_checkpoints/
 !week_6_stream_processing/avro_example/data/rides.csv
+
+.codegpt
+
+# Ignore Visual Studio Code settings directory
+.vscode/
