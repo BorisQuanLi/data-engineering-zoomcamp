@@ -14,7 +14,12 @@ serving_dir
 .ipynb_checkpoints/
 !week_6_stream_processing/avro_example/data/rides.csv
 
+# Ignore all Parquet files
+*.parquet
+
+# Ignore CodeGPT files
+.codegpt/
 .codegpt
 
-# Ignore Visual Studio Code settings directory
+# Ignore all vscode/ folders
 .vscode/

@@ -1,0 +1,4 @@
+# ...existing code...
+
+# Ignore Parquet file
+yellow_tripdata_2024-10.parquet
