@@ -41,5 +41,19 @@ docker run -it \
 # $ psql --version
 # psql (PostgreSQL) 14.15 (Ubuntu 14.15-0ubuntu0.22.04.1)
 
-docker pull postgres:13
-docker run --name pgsql-dev -e POSTGRES_PASSWORD=password -p 5432:5432 postgres
+docker run -d \
+    --name zoomcamp-postgres-container \
+    --label important=true \
+    -e POSTGRES_USER="postgres" \
+    -e POSTGRES_PASSWORD="root" \
+    -e POSTGRES_DB="ny_tax" \
+    -v ~/ny_taxi_postgres_data:/var/lib/postgresql/data \
+    -p 5433:5433 \
+    zoomcamp-postgres:14
+
+(zoomcamp-data-engineering-venv) boris-ubuntu-22-04@2212-Windows11:/mnt/c/Users/Boris_Li/OneDrive/bootcamps/zoomcamps/forked-data-engineering-zoomcamp/data-engineering-zoomcamp$ pgcli -h localhost -p 5433 -u postgres -d ny_tax
+Password for postgres:
+Server: PostgreSQL 14.15 (Debian 14.15-1.pgdg120+1)
+Version: 4.1.0
+Home: http://pgcli.com
+postgres@localhost:ny_tax>
