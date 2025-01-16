@@ -41,6 +41,8 @@ docker run -it \
 # $ psql --version
 # psql (PostgreSQL) 14.15 (Ubuntu 14.15-0ubuntu0.22.04.1)
 
+# Note that, to set the -p option's value, the local folder only works when it is placed 
+# under the WSL2 user's root directory level
 docker run -d \
     --name zoomcamp-postgres-container \
     --label important=true \
@@ -57,3 +59,30 @@ Server: PostgreSQL 14.15 (Debian 14.15-1.pgdg120+1)
 Version: 4.1.0
 Home: http://pgcli.com
 postgres@localhost:ny_tax>
+
+## live command-line demo:
+# 3:25, https://www.youtube.com/watch?v=hCAIVe9N0ow&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=8
+
+docker run -it -d \
+  -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
+  -e PGADMIN_DEFAULT_PASSWORD="root" \
+  -p 8080:80 \
+  --network=pg-network \
+  --name pg-admin \
+  dpage/pgadmin4
+
+# create an ephemeral network (as long as the host PC is not shut down)
+# 7:45, https://www.youtube.com/watch?v=hCAIVe9N0ow&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=8
+boris-ubuntu-22-04@2212-Windows11:~$ docker network create pg-network
+
+# specify the same network name as the PGAdmin container (docker run command above)
+docker run -d \
+    --name zoomcamp-postgres-container-with-network \
+    --label important=true \
+    -e POSTGRES_USER="postgres" \
+    -e POSTGRES_PASSWORD="root" \
+    -e POSTGRES_DB="ny_tax" \
+    -v ~/ny_taxi_postgres_data:/var/lib/postgresql/data \
+    -p 5433:5433 \
+    --network=pg-network \
+    zoomcamp-postgres:14
