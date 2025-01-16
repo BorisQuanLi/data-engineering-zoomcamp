@@ -1,4 +1,7 @@
 # ...existing code...
 
+# Ignore the entire follow-along folder
+follow-along/
+
 # Ignore Parquet file
 yellow_tripdata_2024-10.parquet

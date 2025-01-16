@@ -1,0 +1,10 @@
+// ...existing code...
+
+# Ignore all follow-along folders under any module and workshop subfolders
+**/follow-along/
+
+# Ignore all Parquet files
+*.parquet
+
+# Ignore all CSV files
+*.csv
