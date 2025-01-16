@@ -1,0 +1,13 @@
+# follow along with 
+# https://www.youtube.com/watch?v=B1WwATwf-vY&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=9
+# 12:15
+
+FROM python:3.10.12
+
+RUN apt-get install wget
+RUN pip install pandas sqlalchemy psycopg2
+
+WORKDIR /app
+COPY ingest_data.py ingest_data.py
+
+ENTRYPOINT ["python3", "pipeline.py"]
