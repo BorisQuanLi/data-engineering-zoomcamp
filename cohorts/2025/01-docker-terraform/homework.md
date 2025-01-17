@@ -25,6 +25,21 @@ What's the version of `pip` in the image?
 - 23.3.1
 - 23.2.1
 
+### Solution
+
+```bash
+docker run -it --entrypoint bash python:3.12.8
+pip --version
+```
+
+The output will show:
+```
+pip 23.3.1 from /usr/local/lib/python3.12/site-packages/pip (python 3.12)
+```
+
+### Answer ✅
+
+- 23.3.1
 
 ## Question 2. Understanding Docker networking and docker-compose
 
