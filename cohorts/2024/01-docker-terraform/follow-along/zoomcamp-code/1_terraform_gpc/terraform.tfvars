@@ -1,0 +1,7 @@
+credentials     = "/mnt/c/Users/Boris_Li/OneDrive/bootcamps/zoomcamps/forked-data-engineering-zoomcamp/data-engineering-zoomcamp/cohorts/2024/01-docker-terraform/follow-along/terraform-gcp-v2/gcp_keys/verdant-cargo-406919-2fdfe25d9f90.json"
+project         = "verdant-cargo-406919"
+region          = "us-east1"
+zone            = "us-east1-b"
+location        = "US"
+bq_dataset_name = "taxi_rides_ny"
+gcs_bucket_name = "nyc-tl-data-boris"

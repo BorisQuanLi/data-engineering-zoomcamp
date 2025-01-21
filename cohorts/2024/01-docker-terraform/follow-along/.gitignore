@@ -1,7 +1,8 @@
 # ...existing code...
 
-# Ignore the entire follow-along folder
-follow-along/
+# Ignore the keys folders within follow-along/terraform-gcp
+terraform-gcp/keys/
+terraform-gcp-v2/gcp_keys/
 
 # Ignore Parquet file
 yellow_tripdata_2024-10.parquet

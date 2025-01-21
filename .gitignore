@@ -1,4 +1,5 @@
 .DS_Store
+.DS_Store
 .idea
 *.tfstate
 *.tfstate.*
@@ -23,3 +24,82 @@ serving_dir
 
 # Ignore all vscode/ folders
 .vscode/
+.DS_Store
+.idea
+*.tfstate
+*.tfstate.*
+**.terraform
+**.terraform.lock.*
+**google_credentials.json
+**logs/
+**.env
+**__pycache__/
+.history
+**/ny_taxi_postgres_data/*
+serving_dir
+.ipynb_checkpoints/
+!week_6_stream_processing/avro_example/data/rides.csv
+
+# Ignore all Parquet files
+*.parquet
+
+# Ignore CodeGPT files
+.codegpt/
+.codegpt
+
+# Ignore all vscode/ folders
+.vscode/
+.DS_Store
+.idea
+*.tfstate
+*.tfstate.*
+**.terraform
+**.terraform.lock.*
+**google_credentials.json
+**logs/
+**.env
+**__pycache__/
+.history
+**/ny_taxi_postgres_data/*
+serving_dir
+.ipynb_checkpoints/
+!week_6_stream_processing/avro_example/data/rides.csv
+
+# Ignore all Parquet files
+*.parquet
+
+# Ignore CodeGPT files
+.codegpt/
+.codegpt
+
+# Ignore all vscode/ folders
+.vscode/
+
+# Ignore the entire keys folder
+.idea
+*.tfstate
+*.tfstate.*
+**.terraform
+**.terraform.lock.*
+**google_credentials.json
+**logs/
+**.env
+**__pycache__/
+.history
+**/ny_taxi_postgres_data/*
+serving_dir
+.ipynb_checkpoints/
+!week_6_stream_processing/avro_example/data/rides.csv
+
+# Ignore all Parquet files
+*.parquet
+
+# Ignore CodeGPT files
+.codegpt/
+.codegpt
+
+# Ignore all vscode/ folders
+.vscode/
+
+# Ignore the entire keys folder
+keys/
