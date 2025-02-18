@@ -1,0 +1,11 @@
+# Database libraries
+pgcli
+sqlalchemy
+psycopg2
+
+# Data processing libraries
+pyarrow
+pandas
+
+# credentials management
+python-dotenv

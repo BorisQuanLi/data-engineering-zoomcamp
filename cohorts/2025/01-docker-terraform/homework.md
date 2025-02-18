@@ -125,6 +125,15 @@ Answers:
 - 104,793;  202,661;  109,603;  27,678;  35,189
 - 104,838;  199,013;  109,645;  27,688;  35,202
 
+## Answer ✅
+
+* 104,802; 198,924; 109,603; 27,678; 35,189
+
+SQL queries in: 
+
+Python scripts ingesting the CSV files and loading the data in the PostgreSQL in a container:
+
+
 ## Question 4. Longest trip for each day
 
 Which was the pick up day with the longest trip distance?
