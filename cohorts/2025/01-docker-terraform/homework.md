@@ -129,7 +129,7 @@ Answers:
 
 * 104,802; 198,924; 109,603; 27,678; 35,189
 
-The above answer was obtained through these [SQL queries](https://github.com/BorisQuanLi/data-engineering-zoomcamp/blob/practice/cohorts/2025/01-docker-terraform/code_solution/postgres_preparation/sql_queries.sql), after ingesting the CSV files and loading the data with these [Python scipts]([https://github.com/BorisQuanLi/data-engineering-zoomcamp/blob/practice/cohorts/2025/01-docker-terraform/code_solution/postgres_preparation/upload_green_taxi_and_zones_data.py]()) in the PostgreSQL database in a container.
+The above answer was obtained through these [SQL queries](https://github.com/BorisQuanLi/data-engineering-zoomcamp/blob/practice/cohorts/2025/01-docker-terraform/code_solution/postgres_preparation/sql_queries.sql), after ingesting the CSV files and loading the data with these [Python scripts](https://github.com/BorisQuanLi/data-engineering-zoomcamp/blob/practice/cohorts/2025/01-docker-terraform/code_solution/postgres_preparation/upload_green_taxi_and_zones_data.py) in the PostgreSQL database in a container.
 
 ## Question 4. Longest trip for each day
 
