@@ -123,3 +123,27 @@ ORDER BY daily_max_distance DESC LIMIT 1;
 SELECT 1
 Time: 0.628s
 */
+
+-- Question 5. Three biggest pickup zones
+
+SELECT 
+    CAST(g.lpep_pickup_datetime AS date) AS day,
+    z."Zone" AS Zone,
+    SUM(g.total_amount) AS daily_aggr_total_amount
+FROM green_taxi_data g
+JOIN taxi_zones z ON g."PULocationID" = z."LocationID"
+WHERE g.lpep_pickup_datetime >= '2019-10-18'
+    AND g.lpep_pickup_datetime < '2019-10-19'
+GROUP BY CAST(g.lpep_pickup_datetime AS date), z."Zone"
+HAVING SUM(g.total_amount) > 13000
+ORDER BY daily_aggr_total_amount DESC LIMIT 3;
+
+/*
++------------+---------------------+-------------------------+
+| day        | zone                | daily_aggr_total_amount |
+|------------+---------------------+-------------------------|
+| 2019-10-18 | East Harlem North   | 18686.68000000008       |
+| 2019-10-18 | East Harlem South   | 16797.26000000006       |
+| 2019-10-18 | Morningside Heights | 13029.790000000028      |
++------------+---------------------+-------------------------+
+*/

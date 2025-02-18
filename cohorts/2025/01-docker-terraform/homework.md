@@ -147,7 +147,7 @@ Answer ✅
 
 - 2019-10-31
 
-Solution on one this SQL query:
+Solution based on this SQL query:
 
 ```
 SELECT 
@@ -169,6 +169,29 @@ Consider only `lpep_pickup_datetime` when filtering by date.
 - East Harlem North, Morningside Heights
 - Morningside Heights, Astoria Park, East Harlem South
 - Bedford, East Harlem North, Astoria Park
+
+
+Answer ✅
+
+Solution based on this SQL query:
+
+- East Harlem North, East Harlem South, Morningside Heights
+
+Solution based on this SQL query:
+
+```
+SELECT 
+    CAST(g.lpep_pickup_datetime AS date) AS day,
+    z."Zone" AS Zone,
+    SUM(g.total_amount) AS daily_aggr_total_amount
+FROM green_taxi_data g
+JOIN taxi_zones z ON g."PULocationID" = z."LocationID"
+WHERE g.lpep_pickup_datetime >= '2019-10-18'
+    AND g.lpep_pickup_datetime < '2019-10-19'
+GROUP BY CAST(g.lpep_pickup_datetime AS date), z."Zone"
+HAVING SUM(g.total_amount) > 13000
+ORDER BY daily_aggr_total_amount DESC LIMIT 3;
+```
 
 ## Question 6. Largest tip
 
