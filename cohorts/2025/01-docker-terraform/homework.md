@@ -143,6 +143,21 @@ Tip: For every day, we only care about one single trip with the longest distance
 - 2019-10-26
 - 2019-10-31
 
+Answer ✅
+
+- 2019-10-31
+
+Solution on one this SQL query:
+
+```
+SELECT 
+    CAST(lpep_pickup_datetime AS date), 
+    MAX(trip_distance) AS daily_max_distance
+FROM green_taxi_data 
+GROUP BY CAST(lpep_pickup_datetime AS date)
+ORDER BY daily_max_distance DESC LIMIT 1;
+```
+
 ## Question 5. Three biggest pickup zones
 
 Which were the top pickup locations with over 13,000 in

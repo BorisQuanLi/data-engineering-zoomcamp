@@ -104,3 +104,22 @@ SELECT COUNT(1) AS ten_mile_and_more_trips
 SELECT 1
 Time: 0.086s
 */
+
+-- Question 4. Longest trip for each day
+
+SELECT 
+    CAST(lpep_pickup_datetime AS date), 
+    MAX(trip_distance) AS daily_max_distance
+FROM green_taxi_data 
+GROUP BY CAST(lpep_pickup_datetime AS date)
+ORDER BY daily_max_distance DESC LIMIT 1;
+
+/*
++----------------------+--------------------+
+| lpep_pickup_datetime | daily_max_distance |
+|----------------------+--------------------|
+| 2019-10-31           | 515.89             |
++----------------------+--------------------+
+SELECT 1
+Time: 0.628s
+*/
