@@ -147,3 +147,24 @@ ORDER BY daily_aggr_total_amount DESC LIMIT 3;
 | 2019-10-18 | Morningside Heights | 13029.790000000028      |
 +------------+---------------------+-------------------------+
 */
+
+-- Question 6. Largest tip
+WITH tips AS
+    (SELECT 
+        g."DOLocationID",
+        SUM(g.tip_amount) AS aggr_tip_amount
+    FROM green_taxi_data g
+    JOIN taxi_zones z ON g."PULocationID" = z."LocationID"
+    WHERE g.lpep_pickup_datetime >= '2019-10-01'
+        AND g.lpep_pickup_datetime < '2019-11-01'
+        AND z."Zone" = 'East Harlem North'
+    GROUP BY g."DOLocationID")
+
+SELECT
+    z."Zone",
+    t.aggr_tip_amount
+FROM tips t 
+JOIN taxi_zones z
+    ON t."DOLocationID" = z."LocationID"
+ORDER BY t.aggr_tip_amount DESC
+LIMIT 5;

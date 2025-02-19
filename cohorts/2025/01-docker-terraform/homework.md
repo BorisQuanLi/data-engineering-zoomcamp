@@ -170,7 +170,6 @@ Consider only `lpep_pickup_datetime` when filtering by date.
 - Morningside Heights, Astoria Park, East Harlem South
 - Bedford, East Harlem North, Astoria Park
 
-
 Answer ✅
 
 Solution based on this SQL query:
@@ -207,6 +206,58 @@ We need the name of the zone, not the ID.
 - JFK Airport
 - East Harlem North
 - East Harlem South
+
+## My CTE solution:
+
+```
+WITH top_tips_do_location AS (SELECT 
+	g."DOLocationID", 
+	SUM(g."tip_amount") AS aggr_tip_amount
+FROM green_taxi_data g 
+JOIN taxi_zones z 
+	ON g."PULocationID"=z."LocationID" 
+WHERE 
+	g."lpep_pickup_datetime" >= '2019-10-01' 
+	AND g."lpep_pickup_datetime" < '2019-11-01'
+	AND z."Zone" = 'East Harlem North'
+GROUP BY g."DOLocationID"
+ORDER BY SUM(g."tip_amount") DESC
+LIMIT 1)
+
+
+SELECT 
+	t."DOLocationID",
+	z."Zone",
+	t."aggr_tip_amount"
+FROM top_tips_do_location t
+JOIN taxi_zones z
+	ON t."DOLocationID" = z."LocationID";
+
+```
+
+## ### GitHub Copilot's solution
+
+```
+WITH tips AS (
+    SELECT 
+        g."DOLocationID",
+        SUM(g.tip_amount) AS aggr_tip_amount
+    FROM green_taxi_data g
+    JOIN taxi_zones z ON g."PULocationID" = z."LocationID"
+    WHERE g.lpep_pickup_datetime >= '2019-10-01'
+        AND g.lpep_pickup_datetime < '2019-11-01'
+        AND z."Zone" = 'East Harlem North'
+    GROUP BY g."DOLocationID"
+)
+SELECT
+    z."Zone",
+    t.aggr_tip_amount
+FROM tips t 
+JOIN taxi_zones z ON t."DOLocationID" = z."LocationID"
+WHERE z."Zone" IN ('Yorkville West', 'JFK Airport', 'East Harlem North', 'East Harlem South')
+ORDER BY t.aggr_tip_amount DESC
+LIMIT 5;
+```
 
 ## Terraform
 
