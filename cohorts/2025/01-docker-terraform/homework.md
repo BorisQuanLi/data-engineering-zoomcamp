@@ -207,35 +207,11 @@ We need the name of the zone, not the ID.
 - East Harlem North
 - East Harlem South
 
-## My CTE solution:
+Answer ✅
 
-```
-WITH top_tips_do_location AS (SELECT 
-	g."DOLocationID", 
-	SUM(g."tip_amount") AS aggr_tip_amount
-FROM green_taxi_data g 
-JOIN taxi_zones z 
-	ON g."PULocationID"=z."LocationID" 
-WHERE 
-	g."lpep_pickup_datetime" >= '2019-10-01' 
-	AND g."lpep_pickup_datetime" < '2019-11-01'
-	AND z."Zone" = 'East Harlem North'
-GROUP BY g."DOLocationID"
-ORDER BY SUM(g."tip_amount") DESC
-LIMIT 1)
+- East Harlem South
 
-
-SELECT 
-	t."DOLocationID",
-	z."Zone",
-	t."aggr_tip_amount"
-FROM top_tips_do_location t
-JOIN taxi_zones z
-	ON t."DOLocationID" = z."LocationID";
-
-```
-
-## ### GitHub Copilot's solution
+Solution based on this SQL query:
 
 ```
 WITH tips AS (
@@ -256,7 +232,7 @@ FROM tips t
 JOIN taxi_zones z ON t."DOLocationID" = z."LocationID"
 WHERE z."Zone" IN ('Yorkville West', 'JFK Airport', 'East Harlem North', 'East Harlem South')
 ORDER BY t.aggr_tip_amount DESC
-LIMIT 5;
+LIMIT 1;
 ```
 
 ## Terraform
