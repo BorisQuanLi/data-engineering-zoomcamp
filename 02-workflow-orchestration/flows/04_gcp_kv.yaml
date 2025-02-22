@@ -2,6 +2,7 @@ id: 04_gcp_kv
 namespace: zoomcamp
 
 tasks:
+<<<<<<< HEAD
   - id: gcp_creds
     type: io.kestra.plugin.core.kv.Set
     key: GCP_CREDS
@@ -12,6 +13,8 @@ tasks:
         "project_id": "...",
       }
 
+=======
+>>>>>>> zoomcamp-repo/main
   - id: gcp_project_id
     type: io.kestra.plugin.core.kv.Set
     key: GCP_PROJECT_ID
@@ -34,4 +37,8 @@ tasks:
     type: io.kestra.plugin.core.kv.Set
     key: GCP_DATASET
     kvType: STRING
+<<<<<<< HEAD
     value: zoomcamp
+=======
+    value: zoomcamp
+>>>>>>> zoomcamp-repo/main

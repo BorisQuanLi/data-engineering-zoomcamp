@@ -16,6 +16,7 @@ This is a quick guide on how to setup dbt with BigQuery on Docker.
 - Create `docker-compose.yaml` [file](docker-compose.yaml).
   ```yaml
   version: '3'
+<<<<<<< HEAD
     services:
       dbt-bq-dtc:
         build:
@@ -27,6 +28,19 @@ This is a quick guide on how to setup dbt with BigQuery on Docker.
           - ~/.dbt/:/root/.dbt/
           - ~/.google/credentials/google_credentials.json:/.google/credentials/google_credentials.json
         network_mode: host
+=======
+  services:
+    dbt-bq-dtc:
+      build:
+        context: .
+        target: dbt-bigquery
+      image: dbt/bigquery
+      volumes:
+        - .:/usr/app
+        - ~/.dbt/:/root/.dbt/
+        - ~/.google/credentials/google_credentials.json:/.google/credentials/google_credentials.json
+      network_mode: host
+>>>>>>> zoomcamp-repo/main
   ```
   -   Name the service as you deem right or `dbt-bq-dtc`.
   -   Use the `Dockerfile` in the current directory to build the image by passing `.` in the context.
@@ -71,4 +85,8 @@ This is a quick guide on how to setup dbt with BigQuery on Docker.
      ``` 
     - to test your connection. This should output `All checks passed!` in the end.
     - **Note:** The automatic path conversion in Git Bash will cause the commands to fail with `--workdir` flag. It can be fixed by prefixing the path with `//` as is done above. The solution was found [here](https://github.com/docker/cli/issues/2204#issuecomment-638993192).
+<<<<<<< HEAD
     - Also, we change the working directory to the dbt project because the `dbt_project.yml` file should be in the current directory. Else it will throw `1 check failed: Could not load dbt_project.yml`
+=======
+    - Also, we change the working directory to the dbt project because the `dbt_project.yml` file should be in the current directory. Else it will throw `1 check failed: Could not load dbt_project.yml`
+>>>>>>> zoomcamp-repo/main

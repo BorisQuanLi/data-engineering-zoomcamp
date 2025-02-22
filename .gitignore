@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .DS_Store
 **google_credentials.json
 **logs/
@@ -21,10 +22,16 @@ serving_dir
 .idea
 
 # Ignore Terraform-related folders due to the large-sized files they contain
+=======
+
+.DS_Store
+.idea
+>>>>>>> zoomcamp-repo/main
 *.tfstate
 *.tfstate.*
 **.terraform
 **.terraform.lock.*
+<<<<<<< HEAD
 
 **google_credentials.json
 **logs/
@@ -60,6 +67,8 @@ serving_dir
 *.parquet
 
 # Ignore the entire keys folder
+=======
+>>>>>>> zoomcamp-repo/main
 **google_credentials.json
 **logs/
 **.env
@@ -69,6 +78,9 @@ serving_dir
 serving_dir
 .ipynb_checkpoints/
 !week_6_stream_processing/avro_example/data/rides.csv
+<<<<<<< HEAD
 
 # Ignore the entire keys folder
 keys/
+=======
+>>>>>>> zoomcamp-repo/main

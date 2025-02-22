@@ -20,7 +20,11 @@ A project includes the following files:
 ![image](https://user-images.githubusercontent.com/4315804/148699280-964c4e0b-e685-4c0f-a266-4f3e097156c9.png)
 
 #### Execution
+<<<<<<< HEAD
 After having installed the required tools and cloning this repo, execute the following commnads: 
+=======
+After having installed the required tools and cloning this repo, execute the following commands: 
+>>>>>>> zoomcamp-repo/main
 
 1. Change into the project's directory from the command line: `$ cd [..]/taxi_rides_ny`
 2. Load the CSVs into the database. This materializes the CSVs as tables in your target schema: `$ dbt seed`

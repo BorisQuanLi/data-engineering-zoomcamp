@@ -4,7 +4,11 @@ with trips_data as (
     select * from {{ ref('fact_trips') }}
 )
     select 
+<<<<<<< HEAD
     -- Reveneue grouping 
+=======
+    -- Revenue grouping 
+>>>>>>> zoomcamp-repo/main
     pickup_zone as revenue_zone,
     {{ dbt.date_trunc("month", "pickup_datetime") }} as revenue_month, 
 
