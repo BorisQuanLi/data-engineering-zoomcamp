@@ -1,0 +1,13 @@
+# Airflow runtime files
+logs/*
+!logs/.gitkeep
+
+# PostgreSQL data
+postgres-db-volume/
+
+# Python
+__pycache__/
+*.pyc
+
+# Environment
+.env

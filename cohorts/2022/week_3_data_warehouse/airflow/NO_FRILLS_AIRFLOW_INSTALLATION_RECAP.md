@@ -1,43 +1,98 @@
-# Airflow Installation and Implementation Recap
+# Minimalist Airflow Setup Guide
 
-## Project Structure
+## Overview
+This guide describes a simplified Airflow setup for local development.
+
+## Quick Setup Steps
+
+1. **Create Project Directory Structure**
+```bash
+mkdir -p ./dags ./logs ./plugins
+echo -e "AIRFLOW_UID=$(id -u)\nAIRFLOW_GID=0" > .env
 ```
-airflow/
-├── dags/               # DAG files
-├── docs/               # Documentation
-├── scripts/            # Support scripts
-├── docker-compose*.yml # Docker configurations
-└── setup scripts      # Installation helpers
+
+2. **Setup Google Credentials**
+```bash
+mkdir -p ~/.google/credentials
+# Move your credentials file to the correct location
+mv path/to/your/credentials.json ~/.google/credentials/google_credentials.json
 ```
 
-## Installation Methods
-1. **Docker Setup (Production-like)**
-   - Uses docker-compose-nofrills.yml
-   - Maintains isolation and service orchestration
-   - Recommended for actual pipeline execution
+3. **Download No-Frills Docker Compose**
+```bash
+# Use the existing simplified docker-compose file
+cp docker-compose-nofrills.yml docker-compose.yaml
+```
 
-2. **Local Setup (Development)**
-   - Uses virtual environment
-   - Supports quick testing and debugging
-   - Good for DAG development
+4. **Create Dockerfile**
+```dockerfile
+FROM apache/airflow:2.2.3
 
-## Environment Variables
-- AIRFLOW_HOME: Points to project directory
-- AIRFLOW_VERSION: 2.10.5
-- AIRFLOW_UID: 50000
+ENV AIRFLOW_HOME=/opt/airflow
 
-## Key Files
-1. **Setup Files**
-   - setup.sh
-   - no_frills_airflow_setup.sh
-   - no_frills_airflow_setup.py
+USER root
+RUN apt-get update -qq && apt-get install vim -qqq
+# git gcc g++ -qqq
 
-2. **Configuration**
-   - .env
-   - docker-compose-nofrills.yml
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-3. **Support**
-   - scripts/entrypoint.sh
+# Ref: https://airflow.apache.org/docs/docker-stack/recipes.html
+
+SHELL ["/bin/bash", "-o", "pipefail", "-e", "-u", "-x", "-c"]
+
+ARG CLOUD_SDK_VERSION=322.0.0
+ENV GCLOUD_HOME=/home/google-cloud-sdk
+
+ENV PATH="${GCLOUD_HOME}/bin/:${PATH}"
+
+RUN DOWNLOAD_URL="https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz" \
+    && TMP_DIR="$(mktemp -d)" \
+    && curl -fL "${DOWNLOAD_URL}" --output "${TMP_DIR}/google-cloud-sdk.tar.gz" \
+    && mkdir -p "${GCLOUD_HOME}" \
+    && tar xzf "${TMP_DIR}/google-cloud-sdk.tar.gz" -C "${GCLOUD_HOME}" --strip-components=1 \
+    && "${GCLOUD_HOME}/install.sh" \
+       --bash-completion=false \
+       --path-update=false \
+       --usage-reporting=false \
+       --quiet \
+    && rm -rf "${TMP_DIR}" \
+    && gcloud --version
+
+WORKDIR $AIRFLOW_HOME
+
+USER $AIRFLOW_UID
+```
+
+5. **Start Airflow Services**
+```bash
+docker-compose up -d
+```
+
+## Key Differences from Full Setup
+- Uses simplified docker-compose with fewer services
+- Minimal configuration
+- Focuses on essential components only
+- Perfect for development and learning environments
+
+## Common Issues & Solutions
+
+### Permission Issues
+If you encounter permission problems:
+```bash
+sudo chown -R $USER:$USER .
+```
+
+### Memory Issues
+Ensure Docker has at least 4GB RAM allocated:
+- Windows/Mac: Adjust in Docker Desktop settings
+- Linux: Check system resources
+
+### Connection Issues
+If Airflow can't connect to Postgres:
+1. Stop all containers
+2. Remove them
+3. Start fresh with `docker-compose up -d`
 
 ## Best Practices
 1. Use project-specific Airflow home

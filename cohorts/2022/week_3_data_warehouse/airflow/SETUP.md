@@ -1,84 +1,139 @@
-# No-Frills Airflow Setup Guide
+# Airflow Official Setup Guide
 
-## Important: Development vs Production
-This guide describes setting up Airflow in your local virtual environment for development purposes.
-For actual data pipeline execution, we'll use the Docker setup defined in `docker-compose-nofrills.yml`.
+## Overview
+This guide describes the official Airflow setup using Docker Compose.
 
-### Why Two Environments?
-- **Local Installation** (this guide):
-  - For DAG development and testing
-  - Quick iterations using `airflow standalone`
-  - IDE integration and debugging
+## Environment Variables
+- AIRFLOW_HOME: Points to project directory
+- AIRFLOW_VERSION: 2.10.5
+- AIRFLOW_UID: 50000
 
-- **Docker Installation** (production-like):
-  - Multi-container setup with proper services
-  - Closer to production environment
-  - Isolated from your system
-  - What we'll use for running actual pipelines
+## Setup (Official)
 
-## Prerequisites
-- Python 3.10+
-- pip installed
-- Virtual environment activated
+### Pre-Reqs
 
-## Important Notes
-- This setup uses a project-specific Airflow home directory
-- If you have a global AIRFLOW_HOME in your ~/.bashrc, consider removing it
-- Each project should maintain its own Airflow environment
+1. For the sake of standardization across this workshop's config,
+    rename your gcp-service-accounts-credentials file to `google_credentials.json` & store it in your `$HOME` directory
+    ``` bash
+        cd ~ && mkdir -p ~/.google/credentials/
+        mv <path/to/your/service-account-authkeys>.json ~/.google/credentials/google_credentials.json
+    ```
 
-## Setup Steps
+2. You may need to upgrade your docker-compose version to v2.x+, and set the memory for your Docker Engine to minimum 5GB
+(ideally 8GB). If enough memory is not allocated, it might lead to airflow-webserver continuously restarting.
 
-1. Install python-dotenv first:
-```bash
-pip install python-dotenv
-```
+3. Python version: 3.7+
 
-2. Set up environment:
-   - Copy `.env.example` to `.env`
-   - Edit `.env` if needed (default values should work)
 
-3. Choose one of these setup methods:
+### Airflow Setup
 
-### Option A: Using Bash Script (Recommended)
-```bash
-chmod +x setup.sh    # Make script executable (first time only)
-./setup.sh           # Run the script
-```
+1. Create a new sub-directory called `airflow` in your `project` dir (such as the one we're currently in)
 
-### Option B: Using Python Script
-```bash
-python no_frills_airflow_setup.py
-```
+2. **Set the Airflow user**:
 
-### Option C: Manual Setup
-```bash
-# Install Airflow (copy-paste the whole block)
-PYTHON_VERSION="$(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')"
-CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-2.10.5/constraints-${PYTHON_VERSION}.txt"
-pip install "apache-airflow==2.10.5" --constraint "${CONSTRAINT_URL}"
+    On Linux, the quick-start needs to know your host user-id and needs to have group id set to 0. 
+    Otherwise the files created in `dags`, `logs` and `plugins` will be created with root user. 
+    You have to make sure to configure them for the docker-compose:
 
-# Create directories (run each line)
-mkdir -p /opt/airflow/dags
-mkdir -p /opt/airflow/logs
-mkdir -p /opt/airflow/plugins
-```
+    ```bash
+    mkdir -p ./dags ./logs ./plugins
+    echo -e "AIRFLOW_UID=$(id -u)" > .env
+    ```
 
-## Verification
-After setup, verify installation:
-```bash
-airflow version
-```
+    On Windows you will probably also need it. If you use MINGW/GitBash, execute the same command. 
 
-You should see Airflow version 2.10.5 in the output.
+    To get rid of the warning ("AIRFLOW_UID is not set"), you can create `.env` file with
+    this content:
 
-## Next Steps
-After verifying the installation:
-1. For local development:
-   ```bash
-   airflow standalone
+    ```
+    AIRFLOW_UID=50000
+    ```
+
+3. **Import the official docker setup file** from the latest Airflow version:
+   ```shell
+   curl -LfO 'https://airflow.apache.org/docs/apache-airflow/stable/docker-compose.yaml'
    ```
+   
+4. It could be overwhelming to see a lot of services in here. 
+   But this is only a quick-start template, and as you proceed you'll figure out which unused services can be removed.
+   Eg. [Here's](docker-compose-nofrills.yml) a no-frills version of that template.
 
-2. For production-like environment:
-   ```bash
-   docker-compose -f docker-compose-nofrills.yml up
-   ```
+
+5. **Docker Build**:
+
+    When you want to run Airflow locally, you might want to use an extended image, 
+    containing some additional dependencies - for example you might add new python packages, 
+    or upgrade airflow providers to a later version.
+    
+    Create a `Dockerfile` pointing to Airflow version you've just downloaded, 
+    such as `apache/airflow:2.2.3`, as the base image,
+       
+    And customize this `Dockerfile` by:
+    * Adding your custom packages to be installed. The one we'll need the most is `gcloud` to connect with the GCS bucket/Data Lake.
+    * Also, integrating `requirements.txt` to install libraries via  `pip install`
+
+
+6. **Docker Compose**:
+
+    Back in your `docker-compose.yaml`:
+   * In `x-airflow-common`: 
+     * Remove the `image` tag, to replace it with your `build` from your Dockerfile, as shown
+     * Mount your `google_credentials` in `volumes` section as read-only
+     * Set environment variables: `GCP_PROJECT_ID`, `GCP_GCS_BUCKET`, `GOOGLE_APPLICATION_CREDENTIALS` & `AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT`, as per your config.
+
+   * Change `AIRFLOW__CORE__LOAD_EXAMPLES` to `false` (optional)
+
+7. Here's how the final versions of your [Dockerfile](./Dockerfile) and [docker-compose.yml](./docker-compose.yaml) should look.
+
+
+## Directory Structure
+The following directories are required for Airflow:
+- `dags/` - Already exists with example DAG
+- `logs/` - Created during setup
+- `plugins/` - Created during setup
+
+Note: While these directories are required for Airflow operation, only `dags/` comes pre-populated in this repository.
+
+
+## Problems
+
+### `File /.google/credentials/google_credentials.json was not found`
+
+First, make sure you have your credentials in your `$HOME/.google/credentials`.
+Maybe you missed the step and didn't copy the your JSON with credentials there?
+Also, make sure the file-name is `google_credentials.json`.
+
+Second, check that docker-compose can correctly map this directory to airflow worker.
+
+Execute `docker ps` to see the list of docker containers running on your host machine and find the ID of the airflow worker.
+
+Then execute `bash` on this container:
+
+```bash
+docker exec -it <container-ID> bash
+```
+
+Now check if the file with credentials is actually there:
+
+```bash
+ls -lh /.google/credentials/
+```
+
+If it's empty, docker-compose couldn't map the folder with credentials. 
+In this case, try changing it to the absolute path to this folder:
+
+```yaml
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./plugins:/opt/airflow/plugins
+    # here: ----------------------------
+    - c:/Users/alexe/.google/credentials/:/.google/credentials:ro
+    # -----------------------------------
+```
+
+## Best Practices
+1. Use project-specific Airflow home
+2. Maintain separate dev and prod environments
+3. Version control DAGs and configs
+4. Keep sensitive data in .env (not in VCS)

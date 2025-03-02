@@ -21,14 +21,15 @@ def setup_airflow():
     # Install Airflow
     print("Installing Airflow...")
     subprocess.run([
-        "pip", "install",
+        "pip3", "install",
         f"apache-airflow=={airflow_version}",
         "--constraint", constraint_url
     ])
     
-    # Create directories
-    print("Creating Airflow directories...")
-    for dir_name in ['dags', 'logs', 'plugins']:
+    # Create required directories
+    # Note: dags/ directory already exists with example DAGs
+    print("Creating required directories...")
+    for dir_name in ['logs', 'plugins']:
         Path(os.path.join(airflow_home, dir_name)).mkdir(parents=True, exist_ok=True)
     
     print("Setup complete!")

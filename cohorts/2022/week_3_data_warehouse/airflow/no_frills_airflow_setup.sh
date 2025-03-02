@@ -1,22 +1,33 @@
 #!/bin/bash
 
-# No-frills Airflow Setup Script
-# This script sets up a basic Airflow installation without extra providers or dependencies
-# Designed to work with docker-compose-nofrills.yml
+set -x
 
-# Load environment variables from the minimal .env file
-set -a
-source .env
-set +a
+# Make the script stop if any command returns non-zero exit status
+set -e
 
-# Ensure Python version is supported by Airflow
-PYTHON_VERSION="$(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')"
+# Check for required files
+if [ ! -f "Dockerfile" ]; then
+    echo "Error: Dockerfile not found"
+    exit 1
+fi
 
-# Install core Airflow with version constraints
-CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt"
-pip install "apache-airflow==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
+if [ ! -f "requirements.txt" ]; then
+    echo "Error: requirements.txt not found"
+    exit 1
+fi
 
-# Create Airflow directory structure
-mkdir -p "${AIRFLOW_HOME}/dags"
-mkdir -p "${AIRFLOW_HOME}/logs"
-mkdir -p "${AIRFLOW_HOME}/plugins"
+# Check if docker-compose.yaml exists, if not download it
+if [ ! -f "docker-compose.yaml" ]; then
+    wget https://raw.githubusercontent.com/DataTalksClub/data-engineering-zoomcamp/main/week_2_data_ingestion/airflow/docker-compose-nofrills.yml -O docker-compose.yaml
+fi
+
+# Create necessary directories
+mkdir -p ~/.google/credentials
+mkdir -p ./dags ./logs ./plugins
+
+# Set up environment variables for Airflow
+echo -e "AIRFLOW_UID=$(id -u)\nAIRFLOW_GID=0" > .env
+
+# Start Airflow using docker-compose
+# Remove -d flag to see the progress in real-time
+docker-compose up --build  # Added --build flag to ensure images are built
